@@ -6,4 +6,4 @@
 
 #$SCRIPT_DIR/virtual-dell.sh
 
-feh --bg-scale "$HOME/Pictures/wallpapers/1984.jpg"
+feh --bg-scale "$WALLPAPERS/1984.jpg"
