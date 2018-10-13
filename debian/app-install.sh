@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir -p "$EXTERNAL"
+mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 
 echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/backports.list
 
