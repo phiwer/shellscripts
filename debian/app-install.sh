@@ -261,3 +261,11 @@ sudo make install
 sudo apt-get -qq install -y xkeycaps
 
 sudo apt-get -qq install -y fonts-materialdesignicons-webfont
+
+git clone https://github.com/cocos2d/cocos2d-x.git "$EXTERNAL/cocos2d-x"
+cd "$EXTERNAL/cocos2d-x"
+python download-deps.py
+git submodule update --init
+
+sudo apt-get -qq install -y compton
+sudo apt-get -qq install -y imagemagick
