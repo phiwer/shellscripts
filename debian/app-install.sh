@@ -1,11 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-mkdir -p "$EXTERNAL" 
+set -e
+
+mkdir -p "$EXTERNAL"
+
+echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/backports.list
 
 # Update repositories and update
 
 sudo apt update
 
+
+sudo apt install -t stretch-backports linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
+
+sudo apt update
+
+sudo apt -qq install -y -t stretch-backports nvidia-driver
 
 
 # Spotify

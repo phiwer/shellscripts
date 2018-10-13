@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -9,7 +9,7 @@ echo "Starting bootstrapping"
 # Apt
 echo "Installing applications"
 APP_INSTALL_SCRIPT="$ROOT_DOTFILES_DIR/debian/app-install.sh"
-bash "$APP_INSTALL_SCRIPT"
+sh "$APP_INSTALL_SCRIPT"
 
 # ZShell
 ZSH_PATH=`which zsh`
