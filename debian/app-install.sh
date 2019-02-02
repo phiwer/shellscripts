@@ -217,6 +217,13 @@ sudo apt -qq install -y \
 
 sudo apt -qq install -y docker-ce
 
+# Docker Compose
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Powerline fonts
 sudo apt -qq install -y fonts-powerline
 
 # Edid
@@ -269,3 +276,5 @@ git submodule update --init
 
 sudo apt-get -qq install -y compton
 sudo apt-get -qq install -y imagemagick
+
+sudo apt-get -qq install -y nfs-common
