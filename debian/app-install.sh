@@ -2,39 +2,73 @@
 
 set -e
 
+EXTERNAL="$HOME/sources/external"
+APPS="$HOME/apps/"
+
 mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 
-echo "deb http://httpredir.debian.org/debian stretch-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/backports.list
+# Add keys
+
+## Spotify
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+
+echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+
+
+## Chrome
+
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
+echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+
+
+## PPA
+
+#sudo add-apt-repository ppa:ubuntu-mozilla-security/ppa
+
+#sudo add-apt-repository ppa:aguignard/ppa
+
+
+## Docker
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
 
 # Update repositories and update
 
 sudo apt update
 
+sudo apt autoremove
 
-sudo apt install -t stretch-backports linux-headers-$(uname -r|sed 's/[^-]*-[^-]*-//')
+## Spotify, i3, Docker
 
-sudo apt update
-
-sudo apt -qq install -y -t stretch-backports nvidia-driver
-
-
-# Spotify
-sudo apt -qq install -y dirmngr
-
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A87FF9DF48BF1C90
-
-echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-
-sudo apt update
-
-sudo apt -qq install -y libssl1.0.2
-
-sudo apt -qq install -y spotify-client
-
-
-# I3
+sudo apt -qq remove -y docker docker-engine docker.io
 
 sudo apt -qq install -y \
+     software-properties-common \
+     dh-autoreconf \
+     curl \
+     nvidia-driver \
+     dirmngr \
+     libssl1.0.2 \
+     emacs \
+     zsh \
+     hexchat \
+     xfce4-terminal \
+     feh \
+     mc \
+     irssi \
+     screen \
+     rofi \
+     arandr \
+     \
+     spotify-client \
+     \
      libxcb-keysyms1-dev \
      libpango1.0-dev \
      libxcb-util0-dev \
@@ -51,11 +85,108 @@ sudo apt -qq install -y \
      libstartup-notification0-dev \
      libxcb-randr0-dev \
      libxcb-xrm0 \
-     libxcb-xrm-dev
+     libxcb-xrm-dev \
+     libxcb-shape0 \
+     libxcb-shape0-dev \
+     \
+     google-chrome-stable \
+     \
+     dh-autoreconf \
+     libxcb1-dev \
+     libxcb-keysyms1-dev \
+     libpango1.0-dev \
+     libxcb-util0-dev \
+     libxcb-icccm4-dev \
+     libyajl-dev \
+     libstartup-notification0-dev \
+     libxcb-randr0-dev \
+     libev-dev \
+     libxcb-cursor-dev \
+     libxcb-xinerama0-dev \
+     libxcb-xkb-dev \
+     libxkbcommon-dev \
+     libxkbcommon-x11-dev \
+     autoconf \
+     libxcb-xrm-dev \
+     python-pip \
+     python-dev \
+     build-essential \
+     openjdk-8-jdk \
+     pidgin \
+     pidgin-sipe \
+     i2c-tools \
+     silversearcher-ag \
+     cpufrequtils \
+     nodejs \
+     global \
+     ccache \
+     cmake \
+     ant \
+     gimp \
+     git-review \
+     cppcheck \
+     meld \
+     apt-transport-https \
+     ca-certificates \
+     gnupg2 \
+     software-properties-common \
+     docker-ce \
+     read-edid \
+     libiw-dev \
+     python-xcbgen \
+     xcb-proto \
+     cmake \
+     cmake-data \
+     pkg-config \
+     libxcb-image0-dev \
+     libxcb-ewmh-dev \
+     xkeycaps \
+     fonts-materialdesignicons-webfont \
+     compton \
+     imagemagick \
+     nfs-common \
+     libpulse-dev \
+     libasound2-dev \
+     libnl-3-dev \
+     libxcb1-dev \
+     libxcb-util0-dev \
+     libxcb-randr0-dev \
+     libxcb-composite0-dev \
+     libcairo2-dev \
+     python-pip \
+     python3-pip \
+     virtualenv
+     
+# Add FS-UAE repository
+#echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
+#wget -q -O - http://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_9.0/Release.key | sudo apt-key add -
 
-cd "$EXTERNAL"
-git clone https://www.github.com/Airblader/i3 i3-gaps
-cd i3-gaps
+# FS-UAE
+#sudo apt -qq install -y fs-uae fs-uae-launcher fs-uae-arcade
+
+
+sudo pip3 install --upgrade setuptools pip
+sudo pip3 install numpy scipy
+sudo pip3 install -U scikit-learn
+sudo pip3 install pywal
+
+
+# KVM
+#sudo apt -qq install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
+
+# Docker Compose
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+## i3-gaps
+if [ -d "$EXTERNAL/i3-gaps" ]; then
+    cd "$EXTERNAL/i3-gaps" && git pull
+else
+    git clone https://www.github.com/Airblader/i3 i3-gaps
+    cd "$EXTERNAL/i3-gaps"
+fi
 
 # compile & install
 autoreconf --force --install
@@ -69,212 +200,38 @@ make
 sudo make install
 
 
-# Add FS-UAE repository
-echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
-wget -q -O - http://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_9.0/Release.key | sudo apt-key add -
+## Powerline fonts
+if [ -d "$EXTERNAL/powerline-fonts" ]; then
+    cd "$EXTERNAL/powerline-fonts" && git pull
+else
+    git clone https://github.com/powerline/fonts.git "$EXTERNAL/powerline-fonts"
+    cd "$EXTERNAL/powerline-fonts"
+fi
+
+sudo -u $SUDO_USER ./install.sh
+
+
+## Polybar
+if [ -d "$EXTERNAL/polybar" ]; then
+    cd "$EXTERNAL/polybar" && git pull
+else
+    rm -rf "$EXTERNAL/polybar"
+    git clone --branch 3.2 --recursive https://github.com/jaagr/polybar "$EXTERNAL/polybar"
+    cd "$EXTERNAL/polybar"
+    mkdir build
+fi
 
-# FS-UAE
-sudo apt -qq install -y fs-uae fs-uae-launcher fs-uae-arcade
-
-
-# Chrome
-
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-
-echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
-
-sudo apt update
-
-sudo apt -qq install -y google-chrome-stable
-
-# Emacs
-sudo apt -qq install -y emacs
-
-# ZShell
-sudo apt -qq install -y zsh
-
-# Hexchat
-sudo apt -qq install -y hexchat
-
-# Xfce4 Terminal
-sudo apt -qq install -y xfce4-terminal
-
-# Feh
-sudo apt -qq install -y feh
-
-# Midnight Commander
-sudo apt -qq install -y mc
-
-# Irssi
-sudo apt -qq install -y irssi
-
-# Screen
-sudo apt -qq install -y screen
-
-# Rofi
-sudo apt -qq install -y rofi
-
-# Arandr GUI for xrandr
-sudo apt -qq install -y arandr
-
-# Rxvt
-sudo apt -qq install -y rxvt-unicode
-
-
-#sudo add-apt-repository ppa:ubuntu-mozilla-security/ppa
-
-#sudo add-apt-repository ppa:aguignard/ppa
-
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
-
-sudo apt update
-
-sudo apt upgrade
-
-
-# Dev
-sudo apt -qq install -y dh-autoreconf
-sudo apt -qq install -y libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev libxcb-icccm4-dev libyajl-dev libstartup-notification0-dev libxcb-randr0-dev libev-dev libxcb-cursor-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev autoconf libxcb-xrm-dev
-
-# Python
-sudo apt -qq install -y python-pip python-dev build-essential
-sudo apt -qq install -y python3-pip
-sudo pip install --upgrade pip
-sudo pip install --upgrade pip3
-sudo pip install --upgrade virtualenv
-
-# Numpy & Scipy
-sudo pip install numpy scipy
-
-# Scikit learn
-sudo pip install -U scikit-learn
-
-# Pywal
-sudo pip3 install pywal
-
-# Java
-sudo apt -qq install -y openjdk-8-jdk
-
-# Curl
-sudo apt -qq install -y curl
-
-# Pidgin
-sudo apt -qq install -y pidgin pidgin-sipe
-
-# I2C Tools
-sudo apt -qq install -y i2c-tools
-
-# Silver Searcher
-sudo apt -qq install -y silversearcher-ag
-
-# Cpu Frequtils
-sudo apt -qq install -y cpufrequtils
-
-# Npm
-sudo apt -qq install -y nodejs
-
-# Global
-sudo apt -qq install -y global
-
-# CCache
-sudo apt -qq install -y ccache
-
-# KVM
-sudo apt -qq install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
-
-# CMake
-sudo apt -qq install -y cmake
-
-# Ant
-sudo apt -qq install -y ant
-
-# Gimp
-sudo apt -qq install -y gimp
-
-# Git Review
-sudo apt -qq install -y git-review
-
-# cppcheck
-sudo apt -qq install -y cppcheck
-
-# meld
-sudo apt -qq install -y meld
-
-# Docker
-sudo apt -qq remove -y docker docker-engine docker.io
-
-sudo apt -qq install -y \
-     apt-transport-https \
-     ca-certificates \
-     curl \
-     gnupg2 \
-     software-properties-common
-
-sudo apt -qq install -y docker-ce
-
-# Docker Compose
-
-sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
-sudo chmod +x /usr/local/bin/docker-compose
-
-# Powerline fonts
-sudo apt -qq install -y fonts-powerline
-
-# Edid
-
-sudo apt -qq install -y read-edid
-
-# Iwdef
-sudo apt -qq install -y libiw-dev
-
-# Libalsa dev
-sudo apt -qq install -y libasound2-dev
-
-# Libpulse dev
-sudo apt -qq install -y libpulse-dev
-
-# Libnl
-sudo apt -qq install -y libnl-3-dev
-
-# Remove unused packages
-#sudo apt autoremove
-
-git clone https://github.com/powerline/fonts.git "$EXTERNAL/powerline-fonts"
-cd "$EXTERNAL/powerline-fonts" && ./install.sh && cd 
-
-sudo apt -qq install -y libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev
-sudo apt -qq install -y libcairo2-dev
-sudo apt -qq install -y cmake cmake-data pkg-config
-sudo apt -qq install -y python-xcbgen xcb-proto
-sudo apt -qq install -y libxcb-image0-dev
-sudo apt -qq install -y libxcb-ewmh-dev libxcb-icccm4-dev
-sudo apt -qq install -y libjsoncpp-dev
-
-# TODO: Check if dir already exists. If so, do a git pull.
-git clone --branch 3.2 --recursive https://github.com/jaagr/polybar "$EXTERNAL/polybar"
-cd "$EXTERNAL/polybar"
-# TODO: Remove build if it already exists
-mkdir build
 cd build
 cmake ..
 sudo make install
 
-sudo apt-get -qq install -y xkeycaps
 
-sudo apt-get -qq install -y fonts-materialdesignicons-webfont
-
-git clone https://github.com/cocos2d/cocos2d-x.git "$EXTERNAL/cocos2d-x"
-cd "$EXTERNAL/cocos2d-x"
+## Cocos2dx
+if [ -d "$EXTERNAL/cocos2d-x" ]; then
+    cd "$EXTERNAL/cocos2d-x" && git pull
+else
+    git clone https://github.com/cocos2d/cocos2d-x.git "$EXTERNAL/cocos2d-x"
+    cd "$EXTERNAL/cocos2d-x"
+fi
 python download-deps.py
 git submodule update --init
-
-sudo apt-get -qq install -y compton
-sudo apt-get -qq install -y imagemagick
-
-sudo apt-get -qq install -y nfs-common
