@@ -155,7 +155,9 @@ sudo apt -qq install -y \
      libcairo2-dev \
      python-pip \
      python3-pip \
-     virtualenv
+     virtualenv \
+     libsecret-1-0 \
+     libsecret-1-dev
      
 # Add FS-UAE repository
 #echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
@@ -235,3 +237,9 @@ else
 fi
 python download-deps.py
 git submodule update --init
+
+
+## Repo
+mkdir $HOME/bin
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
