@@ -157,7 +157,9 @@ sudo apt -qq install -y \
      python3-pip \
      virtualenv \
      libsecret-1-0 \
-     libsecret-1-dev
+     libsecret-1-dev \
+     minicom \
+     hdparm
      
 # Add FS-UAE repository
 #echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
