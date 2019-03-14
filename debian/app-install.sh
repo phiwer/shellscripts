@@ -110,6 +110,7 @@ sudo apt -qq install -y \
      libxcb-xrm-dev \
      python-pip \
      python-dev \
+     python3-distutils \
      build-essential \
      openjdk-8-jdk \
      pidgin \
@@ -160,15 +161,10 @@ sudo apt -qq install -y \
      libsecret-1-dev \
      minicom \
      hdparm \
-     i3lock
-     
-# Add FS-UAE repository
-#echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
-#wget -q -O - http://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_9.0/Release.key | sudo apt-key add -
-
-# FS-UAE
-#sudo apt -qq install -y fs-uae fs-uae-launcher fs-uae-arcade
-
+     i3lock \
+     fs-uae \
+     fs-uae-launcher \
+     fs-uae-arcade
 
 sudo pip3 install --upgrade setuptools pip
 sudo pip3 install numpy scipy
