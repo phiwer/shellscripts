@@ -8,7 +8,7 @@ echo "Starting bootstrapping"
 
 # Apt
 echo "Installing applications"
-APP_INSTALL_SCRIPT="$ROOT_DOTFILES_DIR/debian/app-install.sh"
+APP_INSTALL_SCRIPT="$ROOT_DOTFILES_DIR/debian/client-install.sh"
 sh "$APP_INSTALL_SCRIPT"
 
 # ZShell

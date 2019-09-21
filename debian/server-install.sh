@@ -23,13 +23,6 @@ wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key ad
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
 
-## PPA
-
-#sudo add-apt-repository ppa:ubuntu-mozilla-security/ppa
-
-#sudo add-apt-repository ppa:aguignard/ppa
-
-
 ## Docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 
