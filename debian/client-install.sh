@@ -2,35 +2,26 @@
 
 set -e
 
-EXTERNAL="$HOME/sources/external"
-APPS="$HOME/apps/"
+EXTERNAL="/home/$UDO_USER/sources/external"
+APPS="/home/$SUDO_USER/apps/"
 
 mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 
 # Add keys
 
 ## Spotify
-
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
-
-echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-
+curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
 ## Chrome
 
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
 
 ## Docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
-
+echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' | sudo tee /etc/apt/sources.list.d/docker.list
 
 # Update repositories and update
 
@@ -74,8 +65,9 @@ sudo apt -qq install -y \
      imagemagick \
      minicom \
      hdparm \
-     i3lock
+     i3lock \
      spotify-client \
+     firmware-linux \
      \
      libxcb-keysyms1-dev \
      libpango1.0-dev \
@@ -217,6 +209,6 @@ git submodule update --init
 
 
 ## Repo
-mkdir $HOME/bin
+mkdir /home/$SUDO_USER/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
