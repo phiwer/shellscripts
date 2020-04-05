@@ -4,10 +4,10 @@
 
 set -e
 
-#if [[ $EUID -ne 0 ]]; then
-#    echo "This script must be run as root"
-#    exit 1
-#fi
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root"
+    exit 1
+fi
 
 
 EXTERNAL="/home/$SUDO_USER/sources/external"
@@ -18,22 +18,17 @@ mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 # Add keys
 
 ## Spotify
-
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
-
-echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-
+curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
 ## Chrome
 
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
 
 ## Docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
 echo "deb [allow-insecure=yes arch=amd64] https://download.docker.com/linux/debian buster stable" | sudo tee /etc/apt/sources.list.d/docker-stable.list
 
 # Add FS-UAE repository
@@ -85,7 +80,7 @@ apt -qq install -y \
      spotify-client \
      lightdm \
      xkeycaps \
-     \
+     firmware-linux \
      libxcb-keysyms1-dev \
      libpango1.0-dev \
      libxcb-util0-dev \
@@ -227,6 +222,7 @@ sudo -u $SUDO_USER git submodule update --init
 
 
 ## Repo
+
 sudo -u $SUDO_USER mkdir /home/$SUDO_USER/bin
 sudo -u $SUDO_USER curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 sudo -u $SUDO_USER chmod a+x ~/bin/repo
