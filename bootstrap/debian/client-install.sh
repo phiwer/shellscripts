@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
+## TODO: Check if running with normal user. If not, then abort.
+
 set -e
 
-EXTERNAL="$HOME/sources/external"
-APPS="$HOME/apps/"
+#if [[ $EUID -ne 0 ]]; then
+#    echo "This script must be run as root"
+#    exit 1
+#fi
+
+
+EXTERNAL="/home/$SUDO_USER/sources/external"
+APPS="/home/$SUDO_USER/apps/"
 
 mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 
@@ -11,7 +19,7 @@ mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
 
 ## Spotify
 
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
 
 echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
 
@@ -26,25 +34,24 @@ echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sud
 ## Docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
+echo "deb [allow-insecure=yes arch=amd64] https://download.docker.com/linux/debian buster stable" | sudo tee /etc/apt/sources.list.d/docker-stable.list
+
+# Add FS-UAE repository
+echo "deb [allow-insecure=yes] http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
+wget -q -O - http://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_9.0/Release.key | sudo apt-key add -
 
 
 # Update repositories and update
 
-sudo apt update
+apt update --allow-unauthenticated
 
-sudo apt autoremove
+apt autoremove
 
 ## Spotify, i3, Docker
 
-sudo apt -qq remove -y docker docker-engine docker.io
+apt -qq remove -y docker docker-engine docker.io
 
-#$DEBIAN_PACKAGING="dh-autoreconf"
-
-sudo apt -qq install -y \
+apt -qq install -y \
      software-properties-common \
      curl \
      nvidia-driver \
@@ -74,8 +81,10 @@ sudo apt -qq install -y \
      imagemagick \
      minicom \
      hdparm \
-     i3lock
+     i3lock \
      spotify-client \
+     lightdm \
+     xkeycaps \
      \
      libxcb-keysyms1-dev \
      libpango1.0-dev \
@@ -98,7 +107,6 @@ sudo apt -qq install -y \
      libpulse-dev \
      libasound2-dev \
      libnl-3-dev \
-     libxcb1-dev \
      libxcb-util0-dev \
      libxcb-composite0-dev \
      libcairo2-dev \
@@ -107,12 +115,17 @@ sudo apt -qq install -y \
      libxcb-ewmh-dev \
      python-dev \
      libsecret-1-dev \
+     python-xcbgen \
+     xcb-proto \
+     nfs-common \
+     libsecret-1-0 \
      \
      google-chrome-stable \
      ca-certificates \
      \
      autoconf \
      build-essential \
+     linux-perf \
      \
      python-pip \
      python-pip \
@@ -128,26 +141,19 @@ sudo apt -qq install -y \
      global \
      cmake \
      cmake-data \
-     \
-     python-xcbgen \
-     xcb-proto \
      pkg-config \
-     xkeycaps \
-     nfs-common \
-     libsecret-1-0 \
+     wicd \
+     nvidia-settings \
 
-# Add FS-UAE repository
-#echo "deb http://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_9.0/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
-#wget -q -O - http://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_9.0/Release.key | sudo apt-key add -
 
 # FS-UAE
-#sudo apt -qq install -y fs-uae fs-uae-launcher fs-uae-arcade
+apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
 
 
-sudo pip3 install --upgrade setuptools pip
-sudo pip3 install numpy scipy
-sudo pip3 install -U scikit-learn
-sudo pip3 install pywal
+pip3 install --upgrade setuptools pip
+pip3 install numpy scipy
+pip3 install -U scikit-learn
+pip3 install pywal
 
 
 # KVM
@@ -155,29 +161,29 @@ sudo pip3 install pywal
 
 # Docker Compose
 
-sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
-sudo chmod +x /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 
 ## i3-gaps
 if [ -d "$EXTERNAL/i3-gaps" ]; then
     cd "$EXTERNAL/i3-gaps" && git pull
 else
-    git clone https://www.github.com/Airblader/i3 i3-gaps
+    sudo -u $SUDO_USER git clone https://www.github.com/Airblader/i3 i3-gaps
     cd "$EXTERNAL/i3-gaps"
 fi
 
 # compile & install
-autoreconf --force --install
-rm -rf build/
-mkdir -p build && cd build/
+sudo -u $SUDO_USER autoreconf --force --install
+sudo -u $SUDO_USER rm -rf build/
+sudo -u $SUDO_USER mkdir -p build
+cd build/
 
 # Disabling sanitizers is important for release versions!
 # The prefix and sysconfdir are, obviously, dependent on the distribution.
-../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
-make
+sudo -u $SUDO_USER ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+sudo -u $SUDO_USER make
 sudo make install
-
 
 ## Powerline fonts
 if [ -d "$EXTERNAL/powerline-fonts" ]; then
@@ -189,34 +195,38 @@ fi
 
 sudo -u $SUDO_USER ./install.sh
 
-
 ## Polybar
-if [ -d "$EXTERNAL/polybar" ]; then
-    cd "$EXTERNAL/polybar" && git pull
-else
-    rm -rf "$EXTERNAL/polybar"
-    git clone --branch 3.2 --recursive https://github.com/jaagr/polybar "$EXTERNAL/polybar"
-    cd "$EXTERNAL/polybar"
-    mkdir build
-fi
 
+POLYBAR_FILE="polybar-3.4.0.tar"
+sudo -u $SUDO_USER mkdir -p downloads
+sudo -u $SUDO_USER wget "https://github.com/jaagr/polybar/releases/download/3.4.0/$POLYBAR_FILE" -P downloads/
+sudo -u $SUDO_USER tar xvf "downloads/$POLYBAR_FILE" -C "$EXTERNAL/"
+
+cd "$EXTERNAL/polybar"
+
+sudo -u $SUDO_USER rm -rf build
+sudo -u $SUDO_USER mkdir build
 cd build
-cmake ..
-sudo make install
+sudo -u $SUDO_USER cmake ..
+make install
 
+rm -rf downloads/$POLYBAR_FILE
+
+exit 0
 
 ## Cocos2dx
 if [ -d "$EXTERNAL/cocos2d-x" ]; then
     cd "$EXTERNAL/cocos2d-x" && git pull
 else
-    git clone https://github.com/cocos2d/cocos2d-x.git "$EXTERNAL/cocos2d-x"
+    sudo -u $SUDO_USER git clone https://github.com/cocos2d/cocos2d-x.git "$EXTERNAL/cocos2d-x"
     cd "$EXTERNAL/cocos2d-x"
 fi
-python download-deps.py
-git submodule update --init
+
+sudo -u $SUDO_USER python download-deps.py
+sudo -u $SUDO_USER git submodule update --init
 
 
 ## Repo
-mkdir $HOME/bin
-curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-chmod a+x ~/bin/repo
+sudo -u $SUDO_USER mkdir /home/$SUDO_USER/bin
+sudo -u $SUDO_USER curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+sudo -u $SUDO_USER chmod a+x ~/bin/repo
