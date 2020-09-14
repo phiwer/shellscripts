@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-## TODO: Check if running with normal user. If not, then abort.
-
 set -e
 
 if [[ $EUID -ne 0 ]]; then
@@ -112,7 +110,6 @@ apt -qq install -y \
      libxcb-ewmh-dev \
      python-dev \
      libsecret-1-dev \
-     python-xcbgen \
      xcb-proto \
      nfs-common \
      libsecret-1-0 \
@@ -124,8 +121,6 @@ apt -qq install -y \
      build-essential \
      linux-perf \
      \
-     python-pip \
-     python-pip \
      python3-pip \
      virtualenv \
      nodejs \
@@ -139,9 +134,10 @@ apt -qq install -y \
      cmake \
      cmake-data \
      pkg-config \
-     wicd \
      nvidia-settings \
-
+     libxcb1-dev \
+     python3-xcbgen \
+     clang \
 
 # FS-UAE
 apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
@@ -194,9 +190,9 @@ sudo -u $SUDO_USER ./install.sh
 
 ## Polybar
 
-POLYBAR_FILE="polybar-3.4.0.tar"
+POLYBAR_FILE="polybar-3.4.3.tar"
 sudo -u $SUDO_USER mkdir -p "downloads"
-sudo -u $SUDO_USER wget "https://github.com/jaagr/polybar/releases/download/3.4.0/$POLYBAR_FILE" -P downloads/
+sudo -u $SUDO_USER wget "https://github.com/jaagr/polybar/releases/download/3.4.3/$POLYBAR_FILE" -P downloads/
 sudo -u $SUDO_USER tar xvf "downloads/$POLYBAR_FILE" -C "$EXTERNAL/"
 
 cd "$EXTERNAL/polybar"
@@ -209,7 +205,15 @@ make install
 
 rm -rf downloads/$POLYBAR_FILE
 
-exit 0
+
+## Repo
+
+sudo -u $SUDO_USER mkdir -p /home/$SUDO_USER/bin
+sudo -u $SUDO_USER curl -o /home/$SUDO_USER/bin/repo https://storage.googleapis.com/git-repo-downloads/repo
+sudo -u $SUDO_USER chmod a+x /home/$SUDO_USER/bin/repo
+
+# Log directory
+mkdir -p "/home/$SUDO_USER/logs/minicom"
 
 ## Cocos2dx
 if [ -d "$EXTERNAL/cocos2d-x" ]; then
@@ -222,9 +226,14 @@ fi
 sudo -u $SUDO_USER python download-deps.py
 sudo -u $SUDO_USER git submodule update --init
 
-
-## Repo
-
-sudo -u $SUDO_USER mkdir /home/$SUDO_USER/bin
-sudo -u $SUDO_USER curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-sudo -u $SUDO_USER chmod a+x ~/bin/repo
+# ZShell
+USING_ZSH=$(cat /etc/passwd | grep $SUDO_USER | grep zsh) || true
+echo bajskorv
+echo $USING_ZSH
+if [ -z "$USING_ZSH" ]
+then
+    echo "Changing default shell to zsh"
+    sudo -u $SUDO_USER sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    ZSH_PATH=`which zsh`
+    sudo -u $SUDO_USER chsh -s "$ZSH_PATH"
+fi
