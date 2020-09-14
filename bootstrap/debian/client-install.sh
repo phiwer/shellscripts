@@ -138,6 +138,7 @@ apt -qq install -y \
      libxcb1-dev \
      python3-xcbgen \
      clang \
+     android-tools-adb \
 
 # FS-UAE
 apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
