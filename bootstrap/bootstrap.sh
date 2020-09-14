@@ -18,8 +18,7 @@ sh "$APP_INSTALL_SCRIPT"
 
 # ZShell
 USING_ZSH=$(cat /etc/passwd | grep $SUDO_USER | grep zsh)
-echo $USING_ZSH
-if [ -z  $USING_ZSH ]; then
+if [ -z "$USING_ZSH" ]; then
     echo "Changing default shell to zsh"
     sudo -u $SUDO_USER sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     ZSH_PATH=`which zsh`
