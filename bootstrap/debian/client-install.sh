@@ -9,11 +9,13 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+apt -qq install -y curl wget
 
 EXTERNAL="/home/$SUDO_USER/sources/external"
 APPS="/home/$SUDO_USER/apps/"
 
-mkdir -p "$EXTERNAL" && mkdir -p "$APPS"
+sudo -u $SUDO_USER mkdir -p "$EXTERNAL"
+sudo -u $SUDO_USER mkdir -p "$APPS"
 
 # Add keys
 
@@ -51,7 +53,7 @@ apt -qq install -y \
      curl \
      nvidia-driver \
      dirmngr \
-     libssl1.0.2 \
+     libssl1.1 \
      emacs \
      zsh \
      feh \
@@ -127,7 +129,7 @@ apt -qq install -y \
      python3-pip \
      virtualenv \
      nodejs \
-     openjdk-8-jdk \
+     default-jdk \
      ccache \
      cmake \
      ant \
@@ -164,7 +166,7 @@ chmod +x /usr/local/bin/docker-compose
 if [ -d "$EXTERNAL/i3-gaps" ]; then
     cd "$EXTERNAL/i3-gaps" && git pull
 else
-    sudo -u $SUDO_USER git clone https://www.github.com/Airblader/i3 i3-gaps
+    sudo -u $SUDO_USER git clone https://www.github.com/Airblader/i3 $EXTERNAL/i3-gaps
     cd "$EXTERNAL/i3-gaps"
 fi
 
@@ -184,7 +186,7 @@ sudo make install
 if [ -d "$EXTERNAL/powerline-fonts" ]; then
     cd "$EXTERNAL/powerline-fonts" && git pull
 else
-    git clone https://github.com/powerline/fonts.git "$EXTERNAL/powerline-fonts"
+    sudo -u $SUDO_USER git clone https://github.com/powerline/fonts.git "$EXTERNAL/powerline-fonts"
     cd "$EXTERNAL/powerline-fonts"
 fi
 
@@ -193,7 +195,7 @@ sudo -u $SUDO_USER ./install.sh
 ## Polybar
 
 POLYBAR_FILE="polybar-3.4.0.tar"
-sudo -u $SUDO_USER mkdir -p downloads
+sudo -u $SUDO_USER mkdir -p "downloads"
 sudo -u $SUDO_USER wget "https://github.com/jaagr/polybar/releases/download/3.4.0/$POLYBAR_FILE" -P downloads/
 sudo -u $SUDO_USER tar xvf "downloads/$POLYBAR_FILE" -C "$EXTERNAL/"
 
