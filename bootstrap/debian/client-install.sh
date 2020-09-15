@@ -236,7 +236,7 @@ then
 fi
 
 # Fix groups
-sudo usermod -aG sudo,docker,plugdev $SUDO_USER
+sudo usermod -aG sudo,docker,plugdev,dialout $SUDO_USER
 
 # Copy udev rules
 cp *.rules /etc/udev/rules.d/
