@@ -11,9 +11,11 @@ apt -qq install -y curl wget
 
 EXTERNAL="/home/$SUDO_USER/sources/external"
 APPS="/home/$SUDO_USER/apps/"
+BIN="/home/$SUDO_USER/bin/"
 
 sudo -u $SUDO_USER mkdir -p "$EXTERNAL"
 sudo -u $SUDO_USER mkdir -p "$APPS"
+sudo -u $SUDO_USER mkdir -p "$BIN"
 
 # Add keys
 
@@ -207,7 +209,6 @@ rm -rf downloads/$POLYBAR_FILE
 
 ## Repo
 
-sudo -u $SUDO_USER mkdir -p /home/$SUDO_USER/bin
 sudo -u $SUDO_USER curl -o /home/$SUDO_USER/bin/repo https://storage.googleapis.com/git-repo-downloads/repo
 sudo -u $SUDO_USER chmod a+x /home/$SUDO_USER/bin/repo
 
@@ -240,3 +241,6 @@ sudo usermod -aG sudo,docker,plugdev,dialout $SUDO_USER
 
 # Copy udev rules
 cp *.rules /etc/udev/rules.d/
+
+# Copy clproj.sh to bin
+sudo -u $SUDO_USER mv clproj.sh /home/$SUDO_USER/bin
