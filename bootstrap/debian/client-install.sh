@@ -240,4 +240,4 @@ then
 fi
 
 # Fix groups
-sudo usermod -aG sudo, docker $SUDO_USER
+sudo usermod -aG sudo,docker $SUDO_USER
