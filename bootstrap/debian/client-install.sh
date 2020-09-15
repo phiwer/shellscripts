@@ -227,8 +227,6 @@ sudo -u $SUDO_USER git submodule update --init
 
 # ZShell
 USING_ZSH=$(cat /etc/passwd | grep $SUDO_USER | grep zsh) || true
-echo bajskorv
-echo $USING_ZSH
 if [ -z "$USING_ZSH" ]
 then
     echo "Changing default shell to zsh"
@@ -239,3 +237,6 @@ fi
 
 # Fix groups
 sudo usermod -aG sudo,docker $SUDO_USER
+
+# Copy udev rules
+cp *.rules /etc/udev/rules.d/
