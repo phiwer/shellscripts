@@ -238,3 +238,6 @@ then
     ZSH_PATH=`which zsh`
     sudo -u $SUDO_USER chsh -s "$ZSH_PATH"
 fi
+
+# Fix groups
+sudo usermod -aG sudo, docker $SUDO_USER
