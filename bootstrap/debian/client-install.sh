@@ -132,6 +132,7 @@ apt -qq install -y \
     silversearcher-ag \
     spotify-client \
     software-properties-common \
+    wireshark \
     xcb \
     xcb-proto \
     xkeycaps \
@@ -237,7 +238,7 @@ then
 fi
 
 # Fix groups
-sudo usermod -aG sudo,docker,plugdev,dialout $SUDO_USER
+sudo usermod -aG sudo,docker,plugdev,dialout,wireshark $SUDO_USER
 
 # Copy udev rules
 cp *.rules /etc/udev/rules.d/
