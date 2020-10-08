@@ -28,7 +28,6 @@ echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sou
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
-
 ## Docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 echo "deb [allow-insecure=yes arch=amd64] https://download.docker.com/linux/debian buster stable" | sudo tee /etc/apt/sources.list.d/docker-stable.list
@@ -50,6 +49,7 @@ apt -qq remove -y docker docker-engine docker.io
 
 apt -qq install -y \
     android-tools-adb \
+    android-tools-fastboot \
     arandr \
     ant \
     autoconf \
@@ -73,12 +73,14 @@ apt -qq install -y \
     fonts-materialdesignicons-webfont \
     gimp \
     git-review \
+    gitk \
     global \
     gnupg2 \
     google-chrome-stable \
     hdparm \
     i2c-tools \
     i3lock \
+    iotop \
     imagemagick \
     irssi \
     libssl1.1 \
@@ -118,8 +120,10 @@ apt -qq install -y \
     meld \
     minicom \
     nvidia-settings \
+    nvme-cli \
     nfs-common \
     nodejs \
+    npm \
     nvidia-driver \
     pkg-config \
     python-dev \
@@ -132,19 +136,23 @@ apt -qq install -y \
     silversearcher-ag \
     spotify-client \
     software-properties-common \
+    tcpdump \
     wireshark \
     xcb \
     xcb-proto \
     xkeycaps \
     xsel \
     virtualenv \
-    zsh \
+    zsh
 
+
+# Node
+npm install -g @angular/cli
 
 # FS-UAE
 apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
 
-
+# Python
 pip3 install --upgrade setuptools pip
 pip3 install numpy scipy
 pip3 install -U scikit-learn
