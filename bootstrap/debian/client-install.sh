@@ -107,6 +107,7 @@ apt -qq install -y \
     libpulse-dev \
     libasound2-dev \
     libnl-3-dev \
+    libqt5serialport5-dev \
     libxcb-util0-dev \
     libxcb-composite0-dev \
     libcairo2-dev \
@@ -129,6 +130,8 @@ apt -qq install -y \
     python-dev \
     python3-pip \
     python3-xcbgen \
+    qtcreator \
+    qt5-default \
     read-edid \
     rofi \
     rxvt-unicode \
