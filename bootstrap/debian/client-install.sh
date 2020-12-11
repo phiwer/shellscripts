@@ -42,6 +42,9 @@ echo "deb [allow-insecure=yes trusted=yes arch=amd64] https://download.docker.co
 wget -q -O - https://download.opensuse.org/repositories/home:FrodeSolheim:stable/Debian_10/Release.key | sudo apt-key add -
 echo "deb [allow-insecure=yes trusted=yes] https://download.opensuse.org/repositories/home:/FrodeSolheim:/stable/Debian_10/ /" | sudo tee /etc/apt/sources.list.d/FrodeSolheim-stable.list
 
+# MongoDB
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 
 # Update repositories and update
 apt update --allow-unauthenticated
@@ -78,8 +81,6 @@ apt -qq install -y \
     firmware-linux \
     fonts-materialdesignicons-webfont \
     gimp \
-    git-review \
-    gitk \
     global \
     gnupg2 \
     google-chrome-stable \
@@ -89,6 +90,7 @@ apt -qq install -y \
     iotop \
     imagemagick \
     irssi \
+    libappindicator3-1 \
     libssl1.1 \
     libjsoncpp-dev \
     libsecret-1-0 \
@@ -152,16 +154,16 @@ apt -qq install -y \
     meld \
     meson \
     minicom \
-    nvidia-settings \
+    mongodb-org \
     nvme-cli \
     nfs-common \
     nodejs \
     npm \
-    nvidia-driver \
+    pavucontrol \
     pkg-config \
     python-dev \
     python3-pip \
-    python3-xcbgen \
+    python-xcbgen \
     qtcreator \
     read-edid \
     rofi \
@@ -179,6 +181,11 @@ apt -qq install -y \
     virtualenv \
     zsh
 
+apt -qq install -y -t buster-backports \
+    nvidia-driver \
+    nvidia-settings \
+    git-review \
+    gitk \
 
 # Node
 npm install -g @angular/cli
@@ -188,8 +195,8 @@ apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
 
 # Python
 pip3 install --upgrade setuptools pip
-pip3 install numpy scipy
-pip3 install -U scikit-learn
+#pip3 install numpy scipy
+#pip3 install -U scikit-learn
 pip3 install pywal
 
 
