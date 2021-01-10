@@ -46,6 +46,9 @@ echo "deb [allow-insecure=yes trusted=yes] https://download.opensuse.org/reposit
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 
+# NodeJS
+curl -sL https://deb.nodesource.com/setup_12.x | bash -
+
 # Update repositories and update
 apt update --allow-unauthenticated
 
@@ -156,6 +159,7 @@ apt -qq install -y \
     minicom \
     mongodb-org \
     nvme-cli \
+    net-tools \
     nfs-common \
     nodejs \
     npm \
