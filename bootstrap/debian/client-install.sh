@@ -86,6 +86,7 @@ apt -qq install -y \
     libssl1.1 \
     libsecret-1-0 \
     libsecret-1-dev \
+    libsecret-tools \
     libxcb-keysyms1-dev \
     libpango1.0-dev \
     libxcb-util0-dev \
