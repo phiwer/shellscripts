@@ -89,6 +89,7 @@ apt -qq install -y \
     fontconfig \
     fonts-materialdesignicons-webfont \
     fonts-powerline \
+    fonts-hack-ttf \
     gcc \
     gcc-multilib \
     g++ \
@@ -202,7 +203,7 @@ apt -qq install -y \
     virtualenv \
     zlib1g-dev \
     zsh \
-    zip 
+    zip \
 
 # Node
 npm install -g @angular/cli
@@ -211,7 +212,7 @@ npm install -g @angular/cli
 #apt -qq install -y --allow-unauthenticated fs-uae fs-uae-launcher fs-uae-arcade
 
 # Python
-pip3 install --upgrade setuptools pip
+#pip3 install --upgrade setuptools pip
 #pip3 install numpy scipy
 #pip3 install -U scikit-learn
 pip3 install pywal
