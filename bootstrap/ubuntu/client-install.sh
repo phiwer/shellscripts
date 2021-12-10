@@ -69,6 +69,7 @@ apt -qq install -y \
     ant \
     autoconf \
     bison \
+    bridge-utils \
     build-essential \
     ca-certificates \
     ccache \
@@ -181,7 +182,9 @@ apt -qq install -y \
     nodejs \
     pavucontrol \
     pkg-config \
+    policycoreutils-python-utils \
     python-dev \
+    python-is-python3 \
     python3-xcbgen \
     python3-pip \
     qtcreator \
